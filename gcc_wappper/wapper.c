@@ -2,6 +2,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
+#include <windows.h>
 
 int main(int argc, char const *argv[])
 {
@@ -13,9 +14,21 @@ int main(int argc, char const *argv[])
         printf("\nno files given compiletion ended");
         return 1;
     }
+    // get exe path
+    char path[128] = "";
+    GetModuleFileName(NULL, path, 124);
+    // remove the ccw.exe from thta exe path
+    for (int i = strlen(path) - 1; path[i] != '\\'; i--)
+    {
+        path[i] = '\000';
+    }
+    // add libpath.txt to that exe path
+    strcat(path, "libpath.txt");
+    // file stuff
 
+    printf("%s\n", path);
     char buffer[256];
-    sprintf(command, "gcc %s -o %s", argv[1], argv[2]);
+    sprintf(command, "gcc %s -std=c23 -o %s", argv[1], argv[2]);
     // file reader
     int k = 0;
     while (fgets(buffer, 256, pMainfile) != NULL)
@@ -53,7 +66,7 @@ int main(int argc, char const *argv[])
             i = 0;
             char temp_command[256] = "";
             char libkey[128] = "";
-            FILE *pLib = fopen("C:\\Users\\Administrator\\OneDrive\\Desktop\\C\\gcc_wappper\\libpath.txt", "r");
+            FILE *pLib = fopen(path, "r");
             rewind(pLib);
             while (fgets(line, 362, pLib) != NULL)
             {
